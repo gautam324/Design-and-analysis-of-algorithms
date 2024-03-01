@@ -4,22 +4,26 @@
 
 using namespace std;
 
-bool hasPairWithSum(const vector<int>& arr, int key) {
-    int left = 0;
-    int right = arr.size() - 1;
-    
-    while (left < right) {
-        int currentSum = arr[left] + arr[right];
-        if (currentSum == key) {
-            return true; 
-        } else if (currentSum < key) {
-            left++;
-        } else {
-            right--; 
+pair<char, int> findMaxOccurrence(const vector<char>& arr) {
+    const int CHAR_RANGE = 256; 
+
+    vector<int> count(CHAR_RANGE, 0);
+
+    for (char c : arr) {
+        count[c]++;
+    }
+
+    char maxChar = arr[0];
+    int maxCount = count[arr[0]];
+
+    for (char c = 'a'; c <= 'z'; ++c) {
+        if (count[c] > maxCount) {
+            maxCount = count[c];
+            maxChar = c;
         }
     }
-    
-    return false; 
+
+    return make_pair(maxChar, maxCount);
 }
 
 int main() {
@@ -27,23 +31,25 @@ int main() {
     cin >> T;
 
     for (int t = 0; t < T; ++t) {
-        int n, key;
+        int n;
         cin >> n;
-        vector<int> arr(n);
+        vector<char> arr(n);
 
         for (int i = 0; i < n; ++i) {
             cin >> arr[i];
         }
 
-        cin >> key;
-        sort(arr.begin(), arr.end());
+        pair<char, int> result = findMaxOccurrence(arr);
 
-        if (hasPairWithSum(arr, key)) {
-            cout << "Yes\n";
+        if (result.second > 1) {
+            cout << result.first << " - " << result.second << endl;
         } else {
-            cout << "No\n";
+            cout << "No Duplicates Present" << endl;
         }
     }
 
     return 0;
 }
+
+
+
